@@ -28,7 +28,7 @@ An AI-powered platform where users teach skills they know in exchange for learni
 | Frontend | React 18, Vite, Tailwind CSS, Framer Motion |
 | Backend | Node.js, Express.js, Socket.io |
 | Database | MongoDB with Mongoose |
-| AI | Anthropic Claude API (claude-sonnet-4-6) |
+| AI | Google Gemini API (gemini-1.5-flash) - FREE |
 | Auth | JWT (JSON Web Tokens) |
 | i18n | react-i18next (EN, TA, HI) |
 | Charts | Recharts |
@@ -40,7 +40,7 @@ An AI-powered platform where users teach skills they know in exchange for learni
 ### Prerequisites
 - Node.js 18+
 - MongoDB (local or Atlas)
-- Anthropic API key (optional - fallback mode available)
+- Google Gemini API key (FREE - get from https://aistudio.google.com/apikey)
 
 ### Installation
 
@@ -68,7 +68,7 @@ Create a `.env` file in the root directory:
 ```env
 MONGODB_URI=mongodb://localhost:27017/skillswap
 JWT_SECRET=skillswap_super_secret_jwt_key_2024
-ANTHROPIC_API_KEY=your_anthropic_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 PORT=5000
 CLIENT_URL=http://localhost:5173
 NODE_ENV=development
