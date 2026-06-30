@@ -20,7 +20,7 @@ public class Notification {
     private Long userId;
 
     @Column(nullable = false, length = 20)
-    private String type; // match, message, session, rating, system
+    private String type;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
@@ -28,6 +28,7 @@ public class Notification {
     @Column(length = 500)
     private String link;
 
+    @Column(name = "is_read")
     @Builder.Default
     private Boolean isRead = false;
 

@@ -74,7 +74,7 @@ public class AdminController {
         PageRequest pageable = PageRequest.of(page - 1, limit, Sort.by("createdAt").descending());
         Page<User> result;
         if (search != null && !search.isEmpty()) {
-            result = userRepository.findByRoleAndFullNameContainingIgnoreCaseOrRoleAndEmailContainingIgnoreCase("user", search, "user", search, pageable);
+            result = userRepository.searchByRoleAndNameOrEmail("user", search, pageable);
         } else if ("banned".equals(status)) {
             result = userRepository.findByRoleAndIsBanned("user", true, pageable);
         } else if ("active".equals(status)) {

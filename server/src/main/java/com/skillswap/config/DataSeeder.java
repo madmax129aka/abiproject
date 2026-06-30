@@ -12,8 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -66,80 +64,6 @@ public class DataSeeder implements CommandLineRunner {
         }
         System.out.println("Inserted " + skills.length + " skills");
     }
-
-
-    private void seedAdmin() {
-        User admin = User.builder()
-                .fullName("Admin User")
-                .email("admin@skillswap.com")
-                .passwordHash(passwordEncoder.encode("Admin@123"))
-                .dob(LocalDate.of(1990, 1, 1))
-                .gender("Male")
-                .mobile("9999999999")
-                .preferredLanguage("en")
-                .location("Platform")
-                .role("admin")
-                .reputationScore(5.0)
-                .skillSetupComplete(true)
-                .build();
-        userRepository.save(admin);
-        System.out.println("Admin: admin@skillswap.com / Admin@123");
-    }
-
-    private void seedDemoUsers() {
-        List<Map<String, Object>> demos = List.of(
-            Map.of("name","Alex Johnson","email","alex@demo.com","dob","1998-05-15","gender","Male","mobile","9876543210","lang","en","loc","Chennai","rep",4.5,"teach",List.of(Map.of("n","JavaScript","l","Expert"),Map.of("n","React","l","Expert")),"learn",List.of("Python","Guitar")),
-            Map.of("name","Priya Sharma","email","priya@demo.com","dob","1999-08-22","gender","Female","mobile","9876543211","lang","hi","loc","Mumbai","rep",4.2,"teach",List.of(Map.of("n","Python","l","Expert"),Map.of("n","SQL","l","Intermediate")),"learn",List.of("JavaScript","Yoga")),
-            Map.of("name","Karthik Rajan","email","karthik@demo.com","dob","1997-03-10","gender","Male","mobile","9876543212","lang","ta","loc","Coimbatore","rep",4.8,"teach",List.of(Map.of("n","Guitar","l","Expert"),Map.of("n","Music Production","l","Intermediate")),"learn",List.of("React","French")),
-            Map.of("name","Deepa Lakshmi","email","deepa@demo.com","dob","2000-11-05","gender","Female","mobile","9876543213","lang","en","loc","Bangalore","rep",3.8,"teach",List.of(Map.of("n","Yoga","l","Expert"),Map.of("n","Meditation","l","Expert")),"learn",List.of("Python","Photography")),
-            Map.of("name","Rahul Verma","email","rahul@demo.com","dob","1996-07-18","gender","Male","mobile","9876543214","lang","en","loc","Delhi","rep",4.0,"teach",List.of(Map.of("n","Photography","l","Expert"),Map.of("n","Video Editing","l","Intermediate")),"learn",List.of("Guitar","JavaScript"))
-        );
-
-        for (Map<String, Object> d : demos) {
-            User user = User.builder()
-                    .fullName((String) d.get("name"))
-                    .email((String) d.get("email"))
-                    .passwordHash(passwordEncoder.encode("Demo@123"))
-                    .dob(LocalDate.parse((String) d.get("dob")))
-                    .gender((String) d.get("gender"))
-                    .mobile((String) d.get("mobile"))
-                    .preferredLanguage((String) d.get("lang"))
-                    .location((String) d.get("loc"))
-                    .reputationScore((double) d.get("rep"))
-                    .skillSetupComplete(true)
-                    .build();
-            user = userRepository.save(user);
-
-            List<Map<String, String>> teachSkills = (List<Map<String, String>>) d.get("teach");
-            for (Map<String, String> ts : teachSkills) {
-                Skill skill = skillRepository.findByName(ts.get("n")).orElse(null);
-                userSkillRepository.save(UserSkill.builder()
-                        .userId(user.getId())
-                        .skillId(skill != null ? skill.getId() : null)
-                        .skillName(ts.get("n"))
-                        .type("teach")
-                        .experienceLevel(ts.get("l"))
-                        .isVerified(true)
-                        .validationScore(85)
-                        .build());
-            }
-
-            List<String> learnSkills = (List<String>) d.get("learn");
-            for (String ls : learnSkills) {
-                Skill skill = skillRepository.findByName(ls).orElse(null);
-                userSkillRepository.save(UserSkill.builder()
-                        .userId(user.getId())
-                        .skillId(skill != null ? skill.getId() : null)
-                        .skillName(ls)
-                        .type("learn")
-                        .experienceLevel("Beginner")
-                        .build());
-            }
-            System.out.println("Demo: " + d.get("email") + " / Demo@123");
-        }
-    }
-}
-
 
     private void seedAdmin() {
         User admin = User.builder()

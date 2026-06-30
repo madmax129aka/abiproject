@@ -4,6 +4,9 @@ import com.skillswap.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
@@ -11,6 +14,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
     long countByUserIdAndIsRead(Long userId, Boolean isRead);
 
     @Modifying
+    @Transactional
     @Query("UPDATE Notification n SET n.isRead = true WHERE n.userId = :userId AND n.isRead = false")
-    void markAllAsRead(Long userId);
+    void markAllAsRead(@Param("userId") Long userId);
 }

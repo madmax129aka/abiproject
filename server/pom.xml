@@ -7,7 +7,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>3.2.3</version>
-        <relativeTo/>
+        <relativePath/>
     </parent>
     <groupId>com.skillswap</groupId>
     <artifactId>skillswap-server</artifactId>
