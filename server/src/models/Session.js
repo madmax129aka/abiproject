@@ -1,45 +1,43 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const sessionSchema = new mongoose.Schema({
+const Session = sequelize.define('Session', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   matchId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Match',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   teacherId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   learnerId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   skillName: {
-    type: String,
-    required: true
+    type: DataTypes.STRING(100),
+    allowNull: false
   },
   scheduledAt: {
-    type: Date,
-    required: true
+    type: DataTypes.DATE,
+    allowNull: false
   },
   status: {
-    type: String,
-    enum: ['scheduled', 'completed', 'cancelled'],
-    default: 'scheduled'
+    type: DataTypes.ENUM('scheduled', 'completed', 'cancelled'),
+    defaultValue: 'scheduled'
   },
   rated: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
+  tableName: 'sessions',
   timestamps: true
 });
 
-sessionSchema.index({ matchId: 1 });
-sessionSchema.index({ teacherId: 1 });
-sessionSchema.index({ learnerId: 1 });
-sessionSchema.index({ scheduledAt: 1, status: 1 });
-
-module.exports = mongoose.model('Session', sessionSchema);
+module.exports = Session;

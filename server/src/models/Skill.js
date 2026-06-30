@@ -1,22 +1,24 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const skillSchema = new mongoose.Schema({
+const Skill = sequelize.define('Skill', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   name: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    unique: true
   },
   category: {
-    type: String,
-    required: true,
-    trim: true
+    type: DataTypes.STRING(100),
+    allowNull: false
   }
 }, {
+  tableName: 'skills',
   timestamps: true
 });
 
-skillSchema.index({ name: 1 }, { unique: true });
-skillSchema.index({ category: 1 });
-
-module.exports = mongoose.model('Skill', skillSchema);
+module.exports = Skill;

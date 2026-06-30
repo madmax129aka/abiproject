@@ -1,47 +1,45 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const messageSchema = new mongoose.Schema({
+const Message = sequelize.define('Message', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   matchId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Match',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   senderId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   receiverId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   content: {
-    type: String,
-    required: true,
-    maxlength: 5000
+    type: DataTypes.TEXT,
+    allowNull: false
   },
   type: {
-    type: String,
-    enum: ['text', 'resource', 'system'],
-    default: 'text'
+    type: DataTypes.ENUM('text', 'resource', 'system'),
+    defaultValue: 'text'
   },
   resourceUrl: {
-    type: String
+    type: DataTypes.STRING(500)
   },
   isSpam: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
   readAt: {
-    type: Date
+    type: DataTypes.DATE
   }
 }, {
+  tableName: 'messages',
   timestamps: true
 });
 
-messageSchema.index({ matchId: 1, createdAt: 1 });
-messageSchema.index({ senderId: 1 });
-messageSchema.index({ receiverId: 1, readAt: 1 });
-
-module.exports = mongoose.model('Message', messageSchema);
+module.exports = Message;

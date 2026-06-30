@@ -1,93 +1,77 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const userSchema = new mongoose.Schema({
+const User = sequelize.define('User', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   fullName: {
-    type: String,
-    required: [true, 'Full name is required'],
-    trim: true,
-    minlength: 2,
-    maxlength: 100
+    type: DataTypes.STRING(100),
+    allowNull: false
   },
   email: {
-    type: String,
-    required: [true, 'Email is required'],
+    type: DataTypes.STRING(255),
+    allowNull: false,
     unique: true,
-    lowercase: true,
-    trim: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email']
+    validate: { isEmail: true }
   },
   passwordHash: {
-    type: String,
-    required: [true, 'Password is required']
+    type: DataTypes.STRING(255),
+    allowNull: false
   },
   dob: {
-    type: Date
+    type: DataTypes.DATEONLY
   },
   gender: {
-    type: String,
-    enum: ['Male', 'Female', 'Other', 'Prefer not to say']
+    type: DataTypes.ENUM('Male', 'Female', 'Other', 'Prefer not to say')
   },
   mobile: {
-    type: String,
-    trim: true
+    type: DataTypes.STRING(20)
   },
   preferredLanguage: {
-    type: String,
-    enum: ['en', 'ta', 'hi'],
-    default: 'en'
+    type: DataTypes.ENUM('en', 'ta', 'hi'),
+    defaultValue: 'en'
   },
   location: {
-    type: String,
-    trim: true
+    type: DataTypes.STRING(255)
   },
   role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
+    type: DataTypes.ENUM('user', 'admin'),
+    defaultValue: 'user'
   },
   isActive: {
-    type: Boolean,
-    default: true
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
   },
   isBanned: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
   reputationScore: {
-    type: Number,
-    default: 0
+    type: DataTypes.FLOAT,
+    defaultValue: 0
   },
   teachRatingsCount: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
   learnRatingsCount: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
   totalRatingSum: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
-  blockedUsers: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
-  }],
-  reportedBy: [{
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    reason: String,
-    date: { type: Date, default: Date.now }
-  }],
   skillSetupComplete: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
+  tableName: 'users',
   timestamps: true
 });
 
-userSchema.index({ email: 1 }, { unique: true });
-userSchema.index({ role: 1 });
-userSchema.index({ isActive: 1, isBanned: 1 });
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = User;

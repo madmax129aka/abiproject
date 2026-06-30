@@ -1,47 +1,52 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const validationSessionSchema = new mongoose.Schema({
+const ValidationSession = sequelize.define('ValidationSession', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   skillId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Skill'
+    type: DataTypes.INTEGER
   },
   skillName: {
-    type: String,
-    required: true
+    type: DataTypes.STRING(100),
+    allowNull: false
   },
   experienceLevel: {
-    type: String,
-    enum: ['Beginner', 'Intermediate', 'Expert']
+    type: DataTypes.ENUM('Beginner', 'Intermediate', 'Expert')
   },
-  questions: [{
-    question: String,
-    options: [String],
-    correctAnswer: String
-  }],
-  userAnswers: [String],
+  questions: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  userAnswers: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
   score: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
   passed: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
-  aiFeedback: String,
-  perQuestionFeedback: [{
-    correct: Boolean,
-    explanation: String
-  }]
+  aiFeedback: {
+    type: DataTypes.TEXT
+  },
+  perQuestionFeedback: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  }
 }, {
+  tableName: 'validation_sessions',
   timestamps: true
 });
 
-validationSessionSchema.index({ userId: 1 });
-validationSessionSchema.index({ userId: 1, skillName: 1 });
-
-module.exports = mongoose.model('ValidationSession', validationSessionSchema);
+module.exports = ValidationSession;

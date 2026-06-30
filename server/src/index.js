@@ -5,9 +5,12 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
-const connectDB = require('./config/db');
+const { connectDB } = require('./config/db');
 const { setupSocket } = require('./services/socket');
 const seedDatabase = require('./seed');
+
+// Initialize models & associations
+require('./models');
 
 // Route imports
 const authRoutes = require('./routes/auth');

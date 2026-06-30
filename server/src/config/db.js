@@ -1,33 +1,39 @@
-const mongoose = require('mongoose');
+const { Sequelize } = require('sequelize');
+
+const sequelize = new Sequelize(
+  process.env.DB_NAME || 'skillswap',
+  process.env.DB_USER || 'root',
+  process.env.DB_PASSWORD || '',
+  {
+    host: process.env.DB_HOST || 'localhost',
+    port: process.env.DB_PORT || 3306,
+    dialect: 'mysql',
+    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    pool: {
+      max: 10,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    }
+  }
+);
 
 const connectDB = async () => {
   try {
-    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/skillswap';
-    
-    const conn = await mongoose.connect(uri, {
-      maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-    });
+    await sequelize.authenticate();
+    console.log('MySQL Connected Successfully!');
 
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-    
-    mongoose.connection.on('error', (err) => {
-      console.error('MongoDB connection error:', err);
-    });
+    // Sync all models (create tables if not exist)
+    await sequelize.sync({ alter: false });
+    console.log('All tables synced.');
 
-    mongoose.connection.on('disconnected', () => {
-      console.warn('MongoDB disconnected. Attempting to reconnect...');
-    });
-
-    return conn;
+    return sequelize;
   } catch (error) {
-    console.error('MongoDB connection failed:', error.message);
-    // Retry logic
+    console.error('MySQL connection failed:', error.message);
     console.log('Retrying connection in 5 seconds...');
     await new Promise(resolve => setTimeout(resolve, 5000));
     return connectDB();
   }
 };
 
-module.exports = connectDB;
+module.exports = { sequelize, connectDB };

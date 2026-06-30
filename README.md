@@ -27,7 +27,7 @@ An AI-powered platform where users teach skills they know in exchange for learni
 |-------|-----------|
 | Frontend | React 18, Vite, Tailwind CSS, Framer Motion |
 | Backend | Node.js, Express.js, Socket.io |
-| Database | MongoDB with Mongoose |
+| Database | MySQL (Sequelize ORM) - works with MySQL Workbench |
 | AI | Google Gemini API (gemini-1.5-flash) - FREE |
 | Auth | JWT (JSON Web Tokens) |
 | i18n | react-i18next (EN, TA, HI) |
@@ -39,7 +39,7 @@ An AI-powered platform where users teach skills they know in exchange for learni
 
 ### Prerequisites
 - Node.js 18+
-- MongoDB (local or Atlas)
+- MySQL (MySQL Workbench recommended)
 - Google Gemini API key (FREE - get from https://aistudio.google.com/apikey)
 
 ### Installation

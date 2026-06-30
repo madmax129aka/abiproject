@@ -1,47 +1,43 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const ratingSchema = new mongoose.Schema({
+const Rating = sequelize.define('Rating', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   sessionId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Session',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   matchId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Match',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   raterId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   rateeId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   role: {
-    type: String,
-    enum: ['teacher', 'learner'],
-    required: true
+    type: DataTypes.ENUM('teacher', 'learner'),
+    allowNull: false
   },
   stars: {
-    type: Number,
-    required: true,
-    min: 1,
-    max: 5
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: { min: 1, max: 5 }
   },
   feedback: {
-    type: String,
-    maxlength: 1000
+    type: DataTypes.TEXT
   }
 }, {
+  tableName: 'ratings',
   timestamps: true
 });
 
-ratingSchema.index({ sessionId: 1 });
-ratingSchema.index({ rateeId: 1 });
-ratingSchema.index({ raterId: 1 });
-
-module.exports = mongoose.model('Rating', ratingSchema);
+module.exports = Rating;

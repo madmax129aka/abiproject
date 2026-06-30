@@ -1,41 +1,46 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const matchSchema = new mongoose.Schema({
+const Match = sequelize.define('Match', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   userA: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   userB: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
-  userATeaches: [{
-    type: String
-  }],
-  userBTeaches: [{
-    type: String
-  }],
+  userATeaches: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
+  userBTeaches: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
   matchPercentage: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
-  commonInterests: [{
-    type: String
-  }],
+  commonInterests: {
+    type: DataTypes.JSON,
+    defaultValue: []
+  },
   status: {
-    type: String,
-    enum: ['pending', 'active', 'completed', 'blocked'],
-    default: 'active'
+    type: DataTypes.ENUM('pending', 'active', 'completed', 'blocked'),
+    defaultValue: 'active'
   }
 }, {
-  timestamps: true
+  tableName: 'matches',
+  timestamps: true,
+  indexes: [
+    { unique: true, fields: ['userA', 'userB'] }
+  ]
 });
 
-matchSchema.index({ userA: 1, userB: 1 }, { unique: true });
-matchSchema.index({ userA: 1 });
-matchSchema.index({ userB: 1 });
-matchSchema.index({ status: 1 });
-
-module.exports = mongoose.model('Match', matchSchema);
+module.exports = Match;

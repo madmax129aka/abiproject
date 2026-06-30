@@ -1,51 +1,49 @@
-const mongoose = require('mongoose');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../config/db');
 
-const userSkillSchema = new mongoose.Schema({
+const UserSkill = sequelize.define('UserSkill', {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   skillId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Skill'
+    type: DataTypes.INTEGER
   },
   skillName: {
-    type: String,
-    required: true,
-    trim: true
+    type: DataTypes.STRING(100),
+    allowNull: false
   },
   type: {
-    type: String,
-    enum: ['teach', 'learn'],
-    required: true
+    type: DataTypes.ENUM('teach', 'learn'),
+    allowNull: false
   },
   experienceLevel: {
-    type: String,
-    enum: ['Beginner', 'Intermediate', 'Expert'],
-    default: 'Beginner'
+    type: DataTypes.ENUM('Beginner', 'Intermediate', 'Expert'),
+    defaultValue: 'Beginner'
   },
   isVerified: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   },
   validationScore: {
-    type: Number,
-    default: 0
+    type: DataTypes.INTEGER,
+    defaultValue: 0
   },
   certificateUrl: {
-    type: String
+    type: DataTypes.STRING(500)
   },
   certificateVerified: {
-    type: Boolean,
-    default: false
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
+  tableName: 'user_skills',
   timestamps: true
 });
 
-userSkillSchema.index({ userId: 1 });
-userSkillSchema.index({ userId: 1, type: 1 });
-userSkillSchema.index({ skillName: 1, type: 1 });
-
-module.exports = mongoose.model('UserSkill', userSkillSchema);
+module.exports = UserSkill;
